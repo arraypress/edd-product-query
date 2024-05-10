@@ -1,0 +1,30 @@
+{
+  "name": "arraypress/edd-product-query",
+  "description": "This library extends Easy Digital Downloads (EDD) by providing an advanced product query class that supports complex filtering, sorting, and meta queries. It enhances the querying capabilities within WordPress environments by utilizing custom taxonomy and meta data operations, along with transient caching for optimized performance. Ideal for developers needing refined control over EDD product data retrieval.",
+  "homepage": "https://github.com/arraypress/edd-product-query/",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "David Sherlock",
+      "homepage": "https://arraypress.com/"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "require": {
+    "php": "^7.4 || ^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ArrayPress\\Utils\\EDD\\": "src/"
+    },
+    "files": [
+      "src/Utilities.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
