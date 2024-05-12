@@ -1,6 +1,6 @@
 # Easy Digital Downloads Product Query Class
 
-Enhance your Easy Digital Downloads plugin or theme with advanced querying capabilities. This PHP class allows you to perform intricate product queries using detailed parameters like categories, tags, price ranges, and custom meta data. It leverages WordPress's WP_Query to provide optimized, cacheable product listings.
+Enhance your Easy Digital Downloads add-on or custom theme with advanced querying capabilities. This PHP class allows you to perform intricate product queries using detailed parameters like categories, tags, price ranges, and custom meta data. It leverages WordPress's `WP_Query` to provide optimized, cacheable product listings.
 
 ## Features
 
@@ -8,8 +8,8 @@ Enhance your Easy Digital Downloads plugin or theme with advanced querying capab
 - **Support for Meta Queries**: Complex queries on custom fields and EDD properties.
 - **Boolean Flags**: Filter products based on boolean values such as whether a product is shippable or has variable pricing.
 - **Transient Caching**: Improve performance by caching query results.
-- **Debugging Mode**: Output the SQL query for analysis and debugging.
-- 
+- **Debugging Mode**: Output the query arguments for analysis and debugging.
+
 ## Minimum Requirements ##
 
 * **PHP:** 7.4
@@ -42,35 +42,64 @@ Retrieve products using simple taxonomy and property filters:
 
 ```php
 // Use the helper function to get products with specific licensing options.
-$products = get_downloads([
+$products = get_downloads( [
     'licensing' => true // Only products with licensing enabled
-]);
+] );
 
 // Retrieve all access products.
-$products = get_downloads([
+$products = get_downloads( [
     'all_access' => true // Only products with all access enabled
-]);
+] );
 
 // Retrieve variable priced products.
-$products = get_downloads([
+$products = get_downloads( [
     'variable' => true // Only products with variable pricing enabled
-]);
+] );
 
 // Retrieve multi-mode variable priced products.
-$products = get_downloads([
+$products = get_downloads( [
     'multi' => true // Only products with multi-mode enabled
-]);
+] );
 
 // Retrieve shippable products.
-$products = get_downloads([
+$products = get_downloads( [
     'shipping' => true // Only products with shipping enabled
-]);
+] );
 
 // Retrieve commissions products.
-$products = get_downloads([
+$products = get_downloads( [
     'commissions' => true // Only products with commissions enabled
-]);
+] );
+
+// Retrieve commissions products.
+$products = get_downloads( [
+    'commissions' => true // Only products with commissions enabled
+] );
+
+// Retrieve products with files.
+$products = get_downloads( [
+    'files' => true // Only products with files
+] );
+
+// Retrieve subscription products.
+$products = get_downloads( [
+    'recurring' => true // Only products with recurring payments enabled
+] );
 ```
+
+
+'files'            => null,
+'tax_exempt'       => null,
+'commissions'      => null,
+'licensing'        => null,
+'recurring'        => null,
+'all_access'       => null,
+'bundles'          => null,
+'service'          => null,
+'variable'         => null,
+'multi'            => null,
+'shipping'         => null,
+'type'             => null,
 
 ### Taxonomy Filtering
 
@@ -78,24 +107,24 @@ The library supports all registered taxonomies and uses specific operators to re
 
 ```php
 // Query products within a single category.
-$products = get_downloads([
+$products = get_downloads( [
     'category' => 'templates' // Products categorized under 'templates'
-]);
+] );
 
 // Query products belonging to multiple categories.
-$products = get_downloads([
+$products = get_downloads( [
     'category' => [ 'templates', 'audio' ] // Products categorized under 'templates' or 'audio'
-]);
+] );
 
 // Exclude specific categories.
-$products = get_downloads([
+$products = get_downloads( [
     'category__not_in' => [ 'freebies' ] // Products not in 'freebies' category
-]);
+] );
 
 // Products that must match all specified categories.
-$products = get_downloads([
+$products = get_downloads( [
     'category__and' => [ 'templates', 'video' ] // Products must be in both 'templates' and 'video' categories
-]);
+] );
 ```
 
 ### Numeric and Meta Field Queries
@@ -104,18 +133,17 @@ You can directly use numeric fields and comparisons without creating complex met
 
 ```php
 // Query products priced above a certain amount using comparison operators.
-$products = get_downloads([
+$products = get_downloads( [
     'price' => 20,
     'price_compare' => '>' // Products priced greater than 20
-]);
+] );
 
 // Fetch products with a rating above a specific value.
-$products = get_downloads([
+$products = get_downloads( [
     'rating' => 4,
     'rating_compare' => '>=' // Products with a rating of 4 or more
-]);
+] );
 ```
-
 **Supported Numeric Comparison Operators:**
 - `=` : Equal to
 - `!=` : Not equal to
@@ -132,10 +160,10 @@ Enable debugging to view the constructed query arguments, aiding in development 
 
 ```php
 // Debugging a query to see the SQL statement.
-$products = get_downloads([
+$products = get_downloads( [
     'debug' => true, // Enable debugging
     'category' => 'utilities' // Products in 'utilities' category
-]);
+] );
 ```
 
 ## Contributions

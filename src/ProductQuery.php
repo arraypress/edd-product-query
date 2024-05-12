@@ -337,8 +337,6 @@ if ( ! class_exists( __NAMESPACE__ . '\\Product_Query' ) ) :
 			$this->setup_query_args( $args );
 			$this->setup_debug_mode();
 			$this->setup_transient_length( $transient_length );
-
-			$this->transient_length = $transient_length;
 		}
 
 		/** Property Setters **********************************************************/
@@ -383,7 +381,10 @@ if ( ! class_exists( __NAMESPACE__ . '\\Product_Query' ) ) :
 				'multi'            => null,
 				'shipping'         => null,
 				'type'             => null,
-				'debug'            => false
+				'debug'            => false,
+				'date'             => '',
+				'date_after'       => '',
+				'date_before'      => '',
 			];
 
 			$this->query_args = wp_parse_args( $args, $defaults );
@@ -748,6 +749,12 @@ if ( ! class_exists( __NAMESPACE__ . '\\Product_Query' ) ) :
 					$query_args['tax_query'] = $tax_query;
 				}
 
+				// Add the date query if applicable
+				$date_query = $this->prepare_date_query();
+				if ( ! empty( $date_query ) ) {
+					$query_args['date_query'] = $date_query['date_query'];
+				}
+
 				// Debug output if needed
 				if ( $this->debug ) {
 					echo '<pre>';
@@ -779,6 +786,51 @@ if ( ! class_exists( __NAMESPACE__ . '\\Product_Query' ) ) :
 		}
 
 		/** Prepare Queries ***********************************************************/
+
+		/**
+		 * Prepares a date query for WP_Query based on specified date parameters.
+		 * This method constructs an array for the date_query parameter of WP_Query, allowing for complex date-based queries.
+		 * It supports setting conditions for dates after a specific date, before a specific date, or on an exact date.
+		 *
+		 * @return array An associative array containing the 'date_query' parameter for WP_Query if any date conditions are specified, otherwise an empty array.
+		 *
+		 * Usage:
+		 * - 'date_after': Specify a date to fetch posts after this date. Supports 'YYYY-MM-DD HH:MM:SS' format or relative formats.
+		 * - 'date_before': Specify a date to fetch posts before this date. Also supports 'YYYY-MM-DD HH:MM:SS' format or relative formats.
+		 * - 'date': Fetch posts on the exact year, month, and day specified.
+		 *
+		 * The 'inclusive' key for 'date_after' and 'date_before' controls whether the specified day is included in the query.
+		 * Setting 'inclusive' to true includes the border date in the query results.
+		 */
+		private function prepare_date_query(): array {
+			$date_query = [];
+
+			// Check if date parameters are set and add them to the date_query array
+			if ( ! empty( $this->query_args['date_after'] ) ) {
+				$date_query[] = [
+					'after'     => $this->query_args['date_after'], // 'YYYY-MM-DD HH:MM:SS' format or relative formats
+					'inclusive' => true
+				];
+			}
+
+			if ( ! empty( $this->query_args['date_before'] ) ) {
+				$date_query[] = [
+					'before'    => $this->query_args['date_before'],
+					'inclusive' => false
+				];
+			}
+
+			// You can add exact date matches or other conditions
+			if ( ! empty( $this->query_args['date'] ) ) {
+				$date_query[] = [
+					'year'  => date( 'Y', strtotime( $this->query_args['date'] ) ),
+					'month' => date( 'm', strtotime( $this->query_args['date'] ) ),
+					'day'   => date( 'd', strtotime( $this->query_args['date'] ) )
+				];
+			}
+
+			return ! empty( $date_query ) ? [ 'date_query' => $date_query ] : [];
+		}
 
 		/**
 		 * Prepares taxonomy queries based on the taxonomy mappings and query arguments.

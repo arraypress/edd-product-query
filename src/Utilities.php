@@ -29,7 +29,7 @@ if ( ! function_exists( __NAMESPACE__ . '\\get_downloads' ) ) {
 	 *
 	 * @return array|null Array of EDD products or null on failure.
 	 */
-	function get_downloads( array $query_args, bool $use_cache = true, ?callable $error_callback = null ): ?array {
+	function get_downloads( array $query_args, bool $use_cache = true, $transient_length = DAY_IN_SECONDS, ?callable $error_callback = null ): ?array {
 		try {
 			$product_query = new Product_Query( $query_args );
 
